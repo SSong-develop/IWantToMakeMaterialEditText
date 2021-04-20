@@ -24,6 +24,10 @@ import androidx.databinding.InverseBindingMethods
 import com.kr.hkslibrary.iwanttomakematerialedittext.R
 import com.kr.hkslibrary.iwanttomakematerialedittext.databinding.LayoutCustomEditText
 
+/**
+ * inverseBindingMethod에 대해서 inverseBindingAdapter에 대해서 좀 공부해야할 듯?
+ * 코드를 한번씩 보면서 라이브러리 개발자가 어떤 생각으로 작성했는지 이해하는 것이 중요해보인다.
+ */
 @InverseBindingMethods(value = [InverseBindingMethod(type = CustomEditTextOutLineBorder::class, attribute = "textValue", event = "android:textAttrChanged", method = "getTextValue"),
     InverseBindingMethod(type = CustomEditTextOutLineBorder::class, attribute = "errorTextValue"),
     InverseBindingMethod(type = CustomEditTextOutLineBorder::class, attribute = "isErrorEnable")])
@@ -34,8 +38,12 @@ class CustomEditTextOutLineBorder @JvmOverloads constructor(
     defStyleRes : Int = 0
 ) : LinearLayout(context,attrs,defStyle,defStyleRes) {
 
-    lateinit var binding : LayoutCustomEditText
+    var binding : LayoutCustomEditText =
+        LayoutCustomEditText.inflate(LayoutInflater.from(context),this,true)
 
+    /**
+     * 여기 있는 값들을 전부 delegate로 바꿔본다면 어떨까?
+     */
     private var titleColor = ContextCompat.getColor(context, R.color.color_brownish_grey_two)
     private var titleErrorColor = ContextCompat.getColor(context , R.color.color_error)
     private var borderColor = ContextCompat.getColor(context,R.color.color_warm_grey)
@@ -54,7 +62,6 @@ class CustomEditTextOutLineBorder @JvmOverloads constructor(
     private var errorTextBackgroundColor = ContextCompat.getColor(context,R.color.colorPrimary)
 
     init {
-        binding = LayoutCustomEditText.inflate(LayoutInflater.from(context),this,true)
         orientation = VERTICAL
         if(attrs != null){
             getStyleableAttrs(attrs)

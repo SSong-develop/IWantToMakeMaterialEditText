@@ -38,6 +38,9 @@ object CustomEditTextBinder {
         customEditText.setIsErrorEnable(value)
     }
 
+    /**
+     * delegate pattern을 사용해서 보다 간단하게 listener에서 값을 전달할 수도 있지 않을까? 라는 생각은 있는데 해봐야 암
+     */
     @JvmStatic
     @BindingAdapter(value = ["android:afterTextChanged", "android:textAttrChanged"], requireAll = false)
     fun setTextWatcher(filterPositionView: CustomEditTextOutLineBorder, test: TextViewBindingAdapter.AfterTextChanged?, textAttrChanged: InverseBindingListener?) {
