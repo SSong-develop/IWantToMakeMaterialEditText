@@ -27,6 +27,8 @@ import com.kr.hkslibrary.iwanttomakematerialedittext.databinding.LayoutCustomEdi
 /**
  * inverseBindingMethod에 대해서 inverseBindingAdapter에 대해서 좀 공부해야할 듯?
  * 코드를 한번씩 보면서 라이브러리 개발자가 어떤 생각으로 작성했는지 이해하는 것이 중요해보인다.
+ *
+ * 모든 뷰 사이즈에 맞게 margin이나 다른 기타 값들을 적용해봐야 할거 같다.
  */
 @InverseBindingMethods(value = [InverseBindingMethod(type = CustomEditTextOutLineBorder::class, attribute = "textValue", event = "android:textAttrChanged", method = "getTextValue"),
     InverseBindingMethod(type = CustomEditTextOutLineBorder::class, attribute = "errorTextValue"),
@@ -43,6 +45,8 @@ class CustomEditTextOutLineBorder @JvmOverloads constructor(
 
     /**
      * 여기 있는 값들을 전부 delegate로 바꿔본다면 어떨까?
+     * delegate로 set을하고 혹여 값이 변동되는 사항이 있다면?
+     * updateUI함수를 호출해야 하는데;;;; 생각보다 updateUI의 함수 크기가 커서 과하게 작동되는 건 아닌지 생각듬
      */
     private var titleColor = ContextCompat.getColor(context, R.color.color_brownish_grey_two)
     private var titleErrorColor = ContextCompat.getColor(context , R.color.color_error)
@@ -66,6 +70,7 @@ class CustomEditTextOutLineBorder @JvmOverloads constructor(
         if(attrs != null){
             getStyleableAttrs(attrs)
         }
+        updateUI()
     }
 
     private fun getStyleableAttrs(attr : AttributeSet) {
@@ -85,18 +90,24 @@ class CustomEditTextOutLineBorder @JvmOverloads constructor(
             borderColor = it.getColor(R.styleable.custom_component_attributes_custom_component_border_color,ContextCompat.getColor(context,R.color.color_warm_grey))
             borderErrorColor = it.getColor(R.styleable.custom_component_attributes_custom_component_border_error_color,ContextCompat.getColor(context,R.color.color_error))
             borderWidth = it.getColor(R.styleable.custom_component_attributes_custom_component_border_width,1)
-
-            setTitle(title)
-            setEditTextHint(editTextHint)
-            setTextStyle(ResourcesCompat.getFont(context, R.font.graphik_regular))
-            setIsErrorEnable(isErrorEnable)
-            setStyle(inputType, maxLine, minLine, maxLength)
-            setTitleBackGroundColor(titleBackgroundColor)
-            setEditTextBackGroundColor(editTextBackgroundColor)
-            setErrorTextBackGroundColor(errorTextBackgroundColor)
         }
     }
 
+    private fun updateUI(){
+        setTitle(title)
+        setEditTextHint(editTextHint)
+        setTextStyle(ResourcesCompat.getFont(context, R.font.graphik_regular))
+        setIsErrorEnable(isErrorEnable)
+        setStyle(inputType, maxLine, minLine, maxLength)
+        setTitleBackGroundColor(titleBackgroundColor)
+        setEditTextBackGroundColor(editTextBackgroundColor)
+        setErrorTextBackGroundColor(errorTextBackgroundColor)
+    }
+
+    /**
+     * 여기 있는 코드들 전부 줄여서 효과적으로 사용할 수 있을거 같기도 한데
+     * 그렇게 되면 너무 특정 함수에서 많은 일을 하게 되는거 같아 객체지향 적으로 안좋을 수도 있습니다.
+     */
     fun setTextValue(value : String?){
         value?.let {
             binding.editText.setText(value)
